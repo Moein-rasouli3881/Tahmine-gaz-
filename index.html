@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>گز تهمینه | سیستم مدیریت و حسابداری</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Tahoma, Arial, sans-serif;
+}
+
+:root{
+  --gold:#d4af37;
+  --gold-light:#f5d77a;
+  --black:#050505;
+  --dark:#101010;
+  --card:#171717;
+  --border:#40351a;
+  --text:#f5f1e6;
+  --muted:#a7a29a;
+  --green:#2d9b68;
+  --red:#c65353;
+}
+
+body{
+  background:
+  radial-gradient(circle at top, #1c170b 0%, #080808 45%, #030303 100%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+  linear-gradient(90deg, rgba(212,175,55,.025) 1px, transparent 1px),
+  linear-gradient(rgba(212,175,55,.02) 1px, transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+  width:270px;
+  background:rgba(5,5,5,.95);
+  border-left:1px solid var(--border);
+  padding:25px 15px;
+  position:fixed;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index:10;
+}
+
+.brand{
+  text-align:center;
+  padding:15px 5px 30px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:20px;
+}
+
+.logo-placeholder{
+  width:80px;
+  height:80px;
+  margin:auto;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  background:linear-gradient(145deg,#201a09,#050505);
+  box-shadow:0 0 25px rgba(212,175,55,.15);
+}
+
+.brand h2{
+  color:var(--gold);
+  margin-top:12px;
+  font-size:22px;
+}
+
+.brand p{
+  color:var(--muted);
+  margin-top:7px;
+  font-size:12px;
+}
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.menu button{
+  border:none;
+  background:transparent;
+  color:#ddd;
+  text-align:right;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.menu button:hover,
+.menu button.active{
+  background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(212,175,55,.2));
+  color:var(--gold-light);
+  border-right:3px solid var(--gold);
+}
+
+/* Main */
+
+.main{
+  margin-right:270px;
+  width:calc(100% - 270px);
+  padding:25px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+
+.topbar h1{
+  color:var(--gold-light);
+  font-size:25px;
+}
+
+.date{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* Pages */
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  margin-bottom:25px;
+}
+
+.page-title h2{
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.page-title p{
+  color:var(--muted);
+}
+
+/* Dashboard */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:linear-gradient(145deg,#1b1b1b,#101010);
+  border:1px solid var(--border);
+  padding:20px;
+  border-radius:15px;
+  position:relative;
+  overflow:hidden;
+}
+
+.stat:after{
+  content:"";
+  position:absolute;
+  width:80px;
+  height:80px;
+  background:rgba(212,175,55,.06);
+  border-radius:50%;
+  left:-25px;
+  bottom:-25px;
+}
+
+.stat h4{
+  color:var(--muted);
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+.stat strong{
+  color:var(--gold-light);
+  font-size:20px;
+}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:rgba(20,20,20,.95);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+}
+
+.card h3{
+  color:var(--gold);
+  margin-bottom:20px;
+  font-size:17px;
+}
+
+.list-item{
+  padding:13px 0;
+  border-bottom:1px solid #2a2a2a;
+  display:flex;
+  justify-content:space-between;
+}
+
+.list-item:last-child{
+  border-bottom:none;
+}
+
+/* Buttons */
+
+.btn{
+  border:none;
+  padding:11px 18px;
+  border-radius:9px;
+  cursor:pointer;
+  font-size:14px;
+  margin:3px;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,#c99b22,#f0c75e);
+  color:#111;
+  font-weight:bold;
+}
+
+.btn-dark{
+  background:#262626;
+  color:white;
+  border:1px solid #444;
+}
+
+.btn-danger{
+  background:#8f3636;
+  color:white;
+}
+
+/* Forms */
+
+.form-card{
+  background:rgba(20,20,20,.96);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group label{
+  color:var(--gold-light);
+  margin-bottom:7px;
+  font-size:13px;
+}
+
+input, select, textarea{
+  background:#0c0c0c;
+  color:white;
+  border:1px solid #40351a;
+  padding:12px;
+  border-radius:8px;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--gold);
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+/* Table */
+
+.table-wrap{
+  overflow:auto;
+  background:rgba(15,15,15,.9);
+  border-radius:15px;
+  border:1px solid var(--border);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th{
+  color:var(--gold);
+  background:#15120a;
+}
+
+th,td{
+  padding:14px;
+  text-align:right;
+  border-bottom:1px solid #2b2b2b;
+  font-size:13px;
+}
+
+td{
+  color:#ddd;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:25px;
+}
+
+/* Mobile */
+
+.mobile-menu{
+  display:none;
+}
+
+@media(max-width:900px){
+
+  .sidebar{
+    width:230px;
+  }
+
+  .main{
+    margin-right:230px;
+    width:calc(100% - 230px);
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .form-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:650px){
+
+  .sidebar{
+    transform:translateX(100%);
+    transition:.3s;
+    width:250px;
+  }
+
+  .sidebar.show{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-right:0;
+    width:100%;
+    padding:15px;
+  }
+
+  .mobile-menu{
+    display:inline-block;
+  }
+
+  .stats,
+  .dashboard-grid,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .topbar h1{
+    font-size:18px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- Sidebar -->
+
+<aside class="sidebar" id="sidebar">
+
+<div class="brand">
+
+<div class="logo-placeholder">🌿</div>
+
+<h2>گز تهمینه</h2>
+
+<p>سیستم مدیریت و حسابداری</p>
+
+</div>
+
+<div class="menu">
+
+<button class="active" onclick="showPage('dashboard',this)">
+🏠 داشبورد
+</button>
+
+<button onclick="showPage('invoices',this)">
+🧾 فاکتورها
+</button>
+
+<button onclick="showPage('prices',this)">
+🏷️ لیست قیمت
+</button>
+
+<button onclick="showPage('people',this)">
+👥 حساب اشخاص
+</button>
+
+<button onclick="showPage('workers',this)">
+👷 حقوق کارگرها
+</button>
+
+<button onclick="showPage('inventory',this)">
+📦 انبار
+</button>
+
+<button onclick="showPage('checks',this)">
+💳 چک‌ها
+</button>
+
+<button onclick="showPage('expenses',this)">
+💰 هزینه‌ها
+</button>
+
+<button onclick="showPage('payments',this)">
+💸 دریافت و پرداخت
+</button>
+
+<button onclick="showPage('reports',this)">
+📊 گزارش‌ها
+</button>
+
+</div>
+
+</aside>
+
+<!-- Main -->
+
+<main class="main">
+
+<div class="topbar">
+
+<div>
+<button class="btn btn-dark mobile-menu" onclick="toggleMenu()">☰</button>
+<h1>سیستم مدیریت گز تهمینه</h1>
+</div>
+
+<div class="date" id="todayDate"></div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+<div class="page-title">
+
+<h2>داشبورد</h2>
+
+<p>خلاصه وضعیت کسب‌وکار</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h4>فروش امروز</h4>
+<strong id="salesToday">۰ تومان</strong>
+</div>
+
+<div class="stat">
+<h4>طلب مشتری‌ها</h4>
+<strong id="customerDebt">۰ تومان</strong>
+</div>
+
+<div class="stat">
+<h4>چک‌های نزدیک سررسید</h4>
+<strong id="checkCount">۰</strong>
+</div>
+
+<div class="stat">
+<h4>هزینه‌های ثبت شده</h4>
+<strong id="expenseTotal">۰ تومان</strong>
+</div>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>آخرین هزینه‌ها</h3>
+
+<div id="dashboardExpenses">
+
+<div class="empty">
+هنوز هزینه‌ای ثبت نشده است
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>بخش‌های اصلی برنامه</h3>
+
+<div class="list-item">
+<span>🧾 فاکتورها و فروش</span>
+<span>مدیریت</span>
+</div>
+
+<div class="list-item">
+<span>👷 حقوق کارگرها</span>
+<span>۴ نوع حقوق</span>
+</div>
+
+<div class="list-item">
+<span>📦 انبار</span>
+<span>ورود و مصرف</span>
+</div>
+
+<div class="list-item">
+<span>💳 چک‌ها</span>
+<span>دریافتی و پرداختی</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- INVOICES -->
+
+<section id="invoices" class="page">
+
+<div class="page-title">
+
+<h2>فاکتورها</h2>
+
+<p>ثبت فاکتور فروش و خرید</p>
+
+</div>
+
+<div class="form-card">
+
+<h3 style="color:#d4af37;margin-bottom:20px">
+ثبت فاکتور جدید
+</h3>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نوع فاکتور</label>
+<select id="invoiceType">
+<option>فروش</option>
+<option>خرید</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>نام شخص</label>
+<input id="invoicePerson" placeholder="نام مشتری یا فروشنده">
+</div>
+
+<div class="form-group">
+<label>محصول</label>
+<input id="invoiceProduct" placeholder="مثلاً گز طلایی‌کوب">
+</div>
+
+<div class="form-group">
+<label>مقدار / تعداد</label>
+<input id="invoiceQty" type="number">
+</div>
+
+<div class="form-group">
+<label>قیمت واحد</label>
+<input id="invoicePrice" type="number">
+</div>
+
+<div class="form-group">
+<label>قیمت نهایی برای این شخص</label>
+<input id="invoiceCustomPrice" type="number" placeholder="اختیاری">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addInvoice()">
+ثبت فاکتور
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>نوع</th>
+<th>شخص</th>
+<th>محصول</th>
+<th>تعداد</th>
+<th>مبلغ</th>
+<th>تاریخ</th>
+</tr>
+</thead>
+
+<tbody id="invoiceList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- PRICE LIST -->
+
+<section id="prices" class="page">
+
+<div class="page-title">
+
+<h2>لیست قیمت محصولات</h2>
+
+<p>قیمت محصولات گز بر اساس کیلو یا واحد</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نام محصول</label>
+<input id="priceProduct" placeholder="مثلاً گز طلایی‌کوب">
+</div>
+
+<div class="form-group">
+<label>نوع قیمت</label>
+<select id="priceUnit">
+<option>کیلویی</option>
+<option>عددی</option>
+<option>جعبه‌ای</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>قیمت</label>
+<input id="productPrice" type="number">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addPrice()">
+افزودن به لیست قیمت
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>محصول</th>
+<th>نوع قیمت</th>
+<th>قیمت</th>
+</tr>
+</thead>
+
+<tbody id="priceList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- PEOPLE -->
+
+<section id="people" class="page">
+
+<div class="page-title">
+
+<h2>حساب اشخاص</h2>
+
+<p>مشتری، فروشنده و سایر طرف حساب‌ها</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نام شخص</label>
+<input id="personName">
+</div>
+
+<div class="form-group">
+<label>نوع شخص</label>
+<select id="personType">
+<option>مشتری</option>
+<option>فروشنده</option>
+<option>کارگر</option>
+<option>سایر</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>مانده اولیه حساب</label>
+<input id="personBalance" type="number">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addPerson()">
+ثبت شخص
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>نام</th>
+<th>نوع</th>
+<th>مانده حساب</th>
+</tr>
+</thead>
+
+<tbody id="peopleList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- WORKERS -->
+
+<section id="workers" class="page">
+
+<div class="page-title">
+
+<h2>حقوق کارگرها</h2>
+
+<p>حقوق ماهانه، روزانه، ساعتی و تعدادی</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نام کارگر</label>
+<input id="workerName">
+</div>
+
+<div class="form-group">
+<label>نوع حقوق</label>
+
+<select id="workerType">
+
+<option>ماهانه</option>
+<option>روزانه</option>
+<option>ساعتی</option>
+<option>تعدادی</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>مبلغ یا نرخ</label>
+<input id="workerAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>مبلغ پرداخت شده</label>
+<input id="workerPaid" type="number" value="0">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addWorker()">
+ثبت حساب کارگر
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>نام</th>
+<th>نوع حقوق</th>
+<th>کل طلب</th>
+<th>پرداخت شده</th>
+<th>مانده طلب</th>
+</tr>
+</thead>
+
+<tbody id="workerList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- INVENTORY -->
+
+<section id="inventory" class="page">
+
+<div class="page-title">
+
+<h2>انبار</h2>
+
+<p>ثبت موجودی مواد اولیه و ثبت مصرف به صورت دستی</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نام کالا یا ماده اولیه</label>
+<input id="inventoryName" placeholder="مثلاً شکر">
+</div>
+
+<div class="form-group">
+<label>موجودی اولیه</label>
+<input id="inventoryAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>واحد</label>
+<select id="inventoryUnit">
+<option>کیلوگرم</option>
+<option>گرم</option>
+<option>عدد</option>
+<option>کارتن</option>
+</select>
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addInventory()">
+ثبت موجودی
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>کالا</th>
+<th>موجودی</th>
+<th>واحد</th>
+<th>مصرف دستی</th>
+<th>ثبت مصرف</th>
+</tr>
+</thead>
+
+<tbody id="inventoryList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- CHECKS -->
+
+<section id="checks" class="page">
+
+<div class="page-title">
+
+<h2>چک‌ها</h2>
+
+<p>چک‌های دریافتی و پرداختی</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نوع چک</label>
+<select id="checkType">
+<option>دریافتی</option>
+<option>پرداختی</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>نام شخص</label>
+<input id="checkPerson">
+</div>
+
+<div class="form-group">
+<label>مبلغ</label>
+<input id="checkAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>شماره چک</label>
+<input id="checkNumber">
+</div>
+
+<div class="form-group">
+<label>بانک</label>
+<input id="checkBank">
+</div>
+
+<div class="form-group">
+<label>تاریخ سررسید</label>
+<input id="checkDate" type="date">
+</div>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addCheck()">
+ثبت چک
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>نوع</th>
+<th>شخص</th>
+<th>مبلغ</th>
+<th>شماره چک</th>
+<th>بانک</th>
+<th>سررسید</th>
+</tr>
+</thead>
+
+<tbody id="checkList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- EXPENSES -->
+
+<section id="expenses" class="page">
+
+<div class="page-title">
+
+<h2>هزینه‌ها</h2>
+
+<p>ثبت مبلغ هزینه و توضیح دقیق بابت هزینه</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>مبلغ هزینه</label>
+<input id="expenseAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>بابت هزینه</label>
+<input id="expenseTitle" placeholder="مثلاً قبض آب">
+</div>
+
+<div class="form-group">
+<label>تاریخ</label>
+<input id="expenseDate" type="date">
+</div>
+
+</div>
+
+<br>
+
+<div class="form-group">
+
+<label>توضیحات</label>
+
+<textarea id="expenseDescription"
+placeholder="مثلاً یک میلیون تومان بابت قبض آب کارخانه / خرید چسب / خرید منگنه / کرایه حمل بار"></textarea>
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addExpense()">
+ثبت هزینه
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>مبلغ</th>
+<th>بابت</th>
+<th>تاریخ</th>
+<th>توضیحات</th>
+</tr>
+</thead>
+
+<tbody id="expenseList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- PAYMENTS -->
+
+<section id="payments" class="page">
+
+<div class="page-title">
+
+<h2>دریافت و پرداخت</h2>
+
+<p>ثبت دقیق روش پرداخت، شخص و شماره کارت</p>
+
+</div>
+
+<div class="form-card">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>نوع تراکنش</label>
+<select id="paymentType">
+<option>دریافت</option>
+<option>پرداخت</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>نام شخص</label>
+<input id="paymentPerson">
+</div>
+
+<div class="form-group">
+<label>مبلغ</label>
+<input id="paymentAmount" type="number">
+</div>
+
+<div class="form-group">
+<label>روش پرداخت</label>
+
+<select id="paymentMethod">
+
+<option>نقدی</option>
+<option>کارت به کارت</option>
+<option>چک</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>شماره کارت</label>
+<input id="cardNumber" placeholder="در صورت کارت به کارت">
+</div>
+
+<div class="form-group">
+<label>نام صاحب کارت</label>
+<input id="cardOwner">
+</div>
+
+</div>
+
+<br>
+
+<div class="form-group">
+
+<label>بابت</label>
+
+<input id="paymentDescription"
+placeholder="مثلاً بابت فاکتور شماره ۱۰">
+
+</div>
+
+<br>
+
+<button class="btn btn-gold" onclick="addPayment()">
+ثبت تراکنش
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>نوع</th>
+<th>شخص</th>
+<th>مبلغ</th>
+<th>روش</th>
+<th>شماره کارت</th>
+<th>بابت</th>
+</tr>
+</thead>
+
+<tbody id="paymentList"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- REPORTS -->
+
+<section id="reports" class="page">
+
+<div class="page-title">
+
+<h2>گزارش‌ها</h2>
+
+<p>خلاصه اطلاعات ثبت شده در برنامه</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h4>تعداد فاکتورها</h4>
+<strong id="reportInvoices">۰</strong>
+</div>
+
+<div class="stat">
+<h4>تعداد کارگرها</h4>
+<strong id="reportWorkers">۰</strong>
+</div>
+
+<div class="stat">
+<h4>تعداد اقلام انبار</h4>
+<strong id="reportInventory">۰</strong>
+</div>
+
+<div class="stat">
+<h4>تعداد چک‌ها</h4>
+<strong id="reportChecks">۰</strong>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* ذخیره اطلاعات */
+
+let invoices =
+JSON.parse(localStorage.getItem("invoices")) || [];
+
+let prices =
+JSON.parse(localStorage.getItem("prices")) || [];
+
+let people =
+JSON.parse(localStorage.getItem("people")) || [];
+
+let workers =
+JSON.parse(localStorage.getItem("workers")) || [];
+
+let inventory =
+JSON.parse(localStorage.getItem("inventory")) || [];
+
+let checks =
+JSON.parse(localStorage.getItem("checks")) || [];
+
+let expenses =
+JSON.parse(localStorage.getItem("expenses")) || [];
+
+let payments =
+JSON.parse(localStorage.getItem("payments")) || [];
+
+
+/* نمایش تاریخ */
+
+document.getElementById("todayDate").innerText =
+new Date().toLocaleDateString("fa-IR");
+
+
+/* تغییر صفحه */
+
+function showPage(pageId,button){
+
+document.querySelectorAll(".page")
+.forEach(page => page.classList.remove("active"));
+
+document.getElementById(pageId)
+.classList.add("active");
+
+document.querySelectorAll(".menu button")
+.forEach(btn => btn.classList.remove("active"));
+
+if(button) button.classList.add("active");
+
+document.getElementById("sidebar")
+.classList.remove("show");
+
+}
+
+
+/* فرمت پول */
+
+function money(number){
+
+return Number(number || 0)
+.toLocaleString("fa-IR") + " تومان";
+
+}
+
+
+/* فاکتور */
+
+function addInvoice(){
+
+let qty =
+Number(document.getElementById("invoiceQty").value);
+
+let price =
+Number(document.getElementById("invoicePrice").value);
+
+let custom =
+Number(document.getElementById("invoiceCustomPrice").value);
+
+let finalPrice =
+custom > 0 ? custom : qty * price;
+
+invoices.push({
+
+type:invoiceType.value,
+person:invoicePerson.value,
+product:invoiceProduct.value,
+qty:qty,
+amount:finalPrice,
+date:new Date().toLocaleDateString("fa-IR")
+
+});
+
+localStorage.setItem(
+"invoices",
+JSON.stringify(invoices)
+);
+
+renderInvoices();
+
+}
+
+
+/* قیمت */
+
+function addPrice(){
+
+prices.push({
+
+product:priceProduct.value,
+unit:priceUnit.value,
+price:productPrice.value
+
+});
+
+localStorage.setItem(
+"prices",
+JSON.stringify(prices)
+);
+
+renderPrices();
+
+}
+
+
+/* اشخاص */
+
+function addPerson(){
+
+people.push({
+
+name:personName.value,
+type:personType.value,
+balance:personBalance.value
+
+});
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
+
+/* کارگر */
+
+function addWorker(){
+
+let total =
+Number(workerAmount.value);
+
+let paid =
+Number(workerPaid.value);
+
+workers.push({
+
+name:workerName.value,
+type:workerType.value,
+total:total,
+paid:paid,
+balance:total-paid
+
+});
+
+localStorage.setItem(
+"workers",
+JSON.stringify(workers)
+);
+
+renderWorkers();
+
+}
+
+
+/* انبار */
+
+function addInventory(){
+
+inventory.push({
+
+name:inventoryName.value,
+amount:Number(inventoryAmount.value),
+unit:inventoryUnit.value
+
+});
+
+localStorage.setItem(
+"inventory",
+JSON.stringify(inventory)
+);
+
+renderInventory();
+
+}
+
+
+function consumeInventory(index){
+
+let amount =
+Number(
+document.getElementById(
+"consume-"+index
+).value
+);
+
+if(amount > 0){
+
+inventory[index].amount -= amount;
+
+if(inventory[index].amount < 0)
+inventory[index].amount = 0;
+
+localStorage.setItem(
+"inventory",
+JSON.stringify(inventory)
+);
+
+renderInventory();
+
+}
+
+}
+
+
+/* چک */
+
+function addCheck(){
+
+checks.push({
+
+type:checkType.value,
+person:checkPerson.value,
+amount:checkAmount.value,
+number:checkNumber.value,
+bank:checkBank.value,
+date:checkDate.value
+
+});
+
+localStorage.setItem(
+"checks",
+JSON.stringify(checks)
+);
+
+renderChecks();
+
+}
+
+
+/* هزینه */
+
+function addExpense(){
+
+expenses.push({
+
+amount:Number(expenseAmount.value),
+title:expenseTitle.value,
+date:expenseDate.value,
+description:expenseDescription.value
+
+});
+
+localStorage.setItem(
+"expenses",
+JSON.stringify(expenses)
+);
+
+renderExpenses();
+
+}
+
+
+/* پرداخت */
+
+function addPayment(){
+
+payments.push({
+
+type:paymentType.value,
+person:paymentPerson.value,
+amount:Number(paymentAmount.value),
+method:paymentMethod.value,
+card:cardNumber.value,
+owner:cardOwner.value,
+description:paymentDescription.value
+
+});
+
+localStorage.setItem(
+"payments",
+JSON.stringify(payments)
+);
+
+renderPayments();
+
+}
+
+
+/* رندر فاکتور */
+
+function renderInvoices(){
+
+invoiceList.innerHTML = "";
+
+invoices.forEach(item => {
+
+invoiceList.innerHTML += `
+
+<tr>
+
+<td>${item.type}</td>
+
+<td>${item.person}</td>
+
+<td>${item.product}</td>
+
+<td>${item.qty}</td>
+
+<td>${money(item.amount)}</td>
+
+<td>${item.date}</td>
+
+</tr>
+
+`;
+
+});
+
+updateDashboard();
+
+}
+
+
+/* رندر قیمت */
+
+function renderPrices(){
+
+priceList.innerHTML="";
+
+prices.forEach(item => {
+
+priceList.innerHTML += `
+
+<tr>
+
+<td>${item.product}</td>
+
+<td>${item.unit}</td>
+
+<td>${money(item.price)}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* رندر اشخاص */
+
+function renderPeople(){
+
+peopleList.innerHTML="";
+
+people.forEach(item => {
+
+peopleList.innerHTML += `
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.type}</td>
+
+<td>${money(item.balance)}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* رندر کارگر */
+
+function renderWorkers(){
+
+workerList.innerHTML="";
+
+workers.forEach(item => {
+
+workerList.innerHTML += `
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.type}</td>
+
+<td>${money(item.total)}</td>
+
+<td>${money(item.paid)}</td>
+
+<td>${money(item.balance)}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* رندر انبار */
+
+function renderInventory(){
+
+inventoryList.innerHTML="";
+
+inventory.forEach((item,index) => {
+
+inventoryList.innerHTML += `
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.amount}</td>
+
+<td>${item.unit}</td>
+
+<td>
+
+<input
+id="consume-${index}"
+type="number"
+placeholder="مقدار مصرف">
+
+</td>
+
+<td>
+
+<button
+class="btn btn-dark"
+onclick="consumeInventory(${index})">
+
+ثبت مصرف
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* رندر چک */
+
+function renderChecks(){
+
+checkList.innerHTML="";
+
+checks.forEach(item => {
+
+checkList.innerHTML += `
+
+<tr>
+
+<td>${item.type}</td>
+
+<td>${item.person}</td>
+
+<td>${money(item.amount)}</td>
+
+<td>${item.number}</td>
+
+<td>${item.bank}</td>
+
+<td>${item.date}</td>
+
+</tr>
+
+`;
+
+});
+
+updateDashboard();
+
+}
+
+
+/* رندر هزینه */
+
+function renderExpenses(){
+
+expenseList.innerHTML="";
+
+expenses.forEach(item => {
+
+expenseList.innerHTML += `
+
+<tr>
+
+<td>${money(item.amount)}</td>
+
+<td>${item.title}</td>
+
+<td>${item.date}</td>
+
+<td>${item.description}</td>
+
+</tr>
+
+`;
+
+});
+
+updateDashboard();
+
+}
+
+
+/* رندر پرداخت */
+
+function renderPayments(){
+
+paymentList.innerHTML="";
+
+payments.forEach(item => {
+
+paymentList.innerHTML += `
+
+<tr>
+
+<td>${item.type}</td>
+
+<td>${item.person}</td>
+
+<td>${money(item.amount)}</td>
+
+<td>${item.method}</td>
+
+<td>${item.card}</td>
+
+<td>${item.description}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* داشبورد */
+
+function updateDashboard(){
+
+let sales =
+invoices
+.filter(i => i.type === "فروش")
+.reduce((a,b)=>a+b.amount,0);
+
+let debt =
+people
+.filter(p => p.type === "مشتری")
+.reduce((a,b)=>a+Number(b.balance),0);
+
+let expense =
+expenses
+.reduce((a,b)=>a+b.amount,0);
+
+salesToday.innerText =
+money(sales);
+
+customerDebt.innerText =
+money(debt);
+
+checkCount.innerText =
+checks.length.toLocaleString("fa-IR");
+
+expenseTotal.innerText =
+money(expense);
+
+
+/* آخرین هزینه‌ها */
+
+dashboardExpenses.innerHTML="";
+
+if(expenses.length === 0){
+
+dashboardExpenses.innerHTML =
+`<div class="empty">
+هنوز هزینه‌ای ثبت نشده است
+</div>`;
+
+}else{
+
+expenses
+.slice(-5)
+.reverse()
+.forEach(item => {
+
+dashboardExpenses.innerHTML += `
+
+<div class="list-item">
+
+<span>
+${item.title}
+</span>
+
+<span>
+${money(item.amount)}
+</span>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* گزارش */
+
+reportInvoices.innerText =
+invoices.length.toLocaleString("fa-IR");
+
+reportWorkers.innerText =
+workers.length.toLocaleString("fa-IR");
+
+reportInventory.innerText =
+inventory.length.toLocaleString("fa-IR");
+
+reportChecks.innerText =
+checks.length.toLocaleString("fa-IR");
+
+}
+
+
+/* منوی موبایل */
+
+function toggleMenu(){
+
+document.getElementById("sidebar")
+.classList.toggle("show");
+
+}
+
+
+/* شروع */
+
+renderInvoices();
+renderPrices();
+renderPeople();
+renderWorkers();
+renderInventory();
+renderChecks();
+renderExpenses();
+renderPayments();
+updateDashboard();
+
+</script>
+
+</body>
+</html>
